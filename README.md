@@ -1,6 +1,6 @@
 # Late Now! 🎭📺
 
-An experiment into controllable short-form show generation.
+An experiment into controllable short-form show generation. For detailed information visit the [Technical Overview](https://michaelgiba.substack.com/p/late-now)
 
 ## 🚀 Usage
 

@@ -60,8 +60,7 @@ https://github.com/user-attachments/assets/1c5a6e94-6214-48f1-87c0-d212f7c5f9ae
 
 **Video**: 
 
-https://github.com/user-attachments/assets/1c5a6e94-6214-48f1-87c0-d212f7c5f9ae
-
+https://github.com/user-attachments/assets/c18bb13a-0a60-438d-aedd-aaa76a9a8a6a
 
 
 ## 📝 License

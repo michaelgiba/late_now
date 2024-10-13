@@ -1,0 +1,71 @@
+{
+    "title": "Late Night with Walter Spanks",
+    "sequences": [
+        {
+            "type": "broadcast",
+            "parameters": {
+                "text": "El Paso's Solar Panel Co-op Success",
+                "image": "image/dee1dbb4.png",
+                "audio": "audio/f04424fd.wav",
+                "character_to_animation": {
+                    "walter": "animation/e0aef453.json"
+                },
+                "camera_cuts": [
+                    {
+                        "camera": "fly_in",
+                        "duration_sec": 2
+                    },
+                    {
+                        "camera": "main",
+                        "duration_sec": 11.89
+                    },
+                    {
+                        "camera": "main",
+                        "duration_sec": 4.676666666666667
+                    },
+                    {
+                        "camera": "main",
+                        "duration_sec": 3
+                    },
+                    {
+                        "camera": "main",
+                        "duration_sec": 4.25
+                    },
+                    {
+                        "camera": "side_left",
+                        "duration_sec": 7.503333333333333
+                    },
+                    {
+                        "camera": "main",
+                        "duration_sec": 6.29
+                    },
+                    {
+                        "camera": "main",
+                        "duration_sec": 3.49
+                    },
+                    {
+                        "camera": "main",
+                        "duration_sec": 4
+                    },
+                    {
+                        "camera": "main",
+                        "duration_sec": 12.73
+                    },
+                    {
+                        "camera": "side_right",
+                        "duration_sec": 5
+                    },
+                    {
+                        "camera": "main",
+                        "duration_sec": 3.37
+                    },
+                    {
+                        "camera": "main",
+                        "duration_sec": 4
+                    }
+                ]
+            },
+            "duration_sec": 12.73
+        }
+    ]
+}

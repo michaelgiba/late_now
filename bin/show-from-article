@@ -1,0 +1,47 @@
+#!/bin/bash
+
+set -euo pipefail
+
+if [[ $# -eq 0 ]]; then
+    echo "Error: At least one argument is required."
+    exit 1
+fi
+
+CALLER_DIR=$(pwd)
+PROJECT_ROOT=$(dirname $(dirname "$(readlink -f "$0")"))
+
+if [[ -z "${VIRTUAL_ENV:-}" ]]; then
+    source $PROJECT_ROOT/.venv/bin/activate
+fi
+
+source $PROJECT_ROOT/settings.env
+
+set -x
+
+cd $PROJECT_ROOT/python
+
+BROADCAST_UUID=$(cat /proc/sys/kernel/random/uuid | cut -c 1-8)
+NEW_BROADCAST_NAME="broadcast_${BROADCAST_UUID}"
+SHOW_STRUCTURE_JSON=/tmp/${NEW_BROADCAST_NAME}_structure.json
+TAR_BROADCAST_PLAN=/tmp/${NEW_BROADCAST_NAME}.tar
+OUTPUT_MP4_URI=${CALLER_DIR}/${NEW_BROADCAST_NAME}.mp4
+
+# Step 1: Create show structure
+python -m late_now.plan_broadcast.show_structure_main \
+    --article-links "$1" \
+    --output-structure-path ${SHOW_STRUCTURE_JSON}
+
+# Step 2: Package the broadcast
+python -m late_now.plan_broadcast.packaging_main \
+    --input-structure-path ${SHOW_STRUCTURE_JSON} \
+    --output-tar-path ${TAR_BROADCAST_PLAN}
+
+# Step 3: Record the broadcast
+python -m late_now.record_broadcast.main \
+    --input-tar-path ${TAR_BROADCAST_PLAN} \
+    --output-uri ${OUTPUT_MP4_URI}
+
+echo "Broadcast recorded at ${OUTPUT_MP4_URI}."
+
+# Optional: Clean up temporary files
+rm ${SHOW_STRUCTURE_JSON} ${TAR_BROADCAST_PLAN}

@@ -1,0 +1,31 @@
+#!/bin/bash
+
+set -euo pipefail
+
+CALLER_DIR=$(pwd)
+SCRIPT_PATH=$(realpath "$1")
+PROJECT_ROOT=$(dirname $(dirname "$(readlink -f "$0")"))
+
+if [[ -z "${VIRTUAL_ENV:-}" ]]; then
+    source $PROJECT_ROOT/.venv/bin/activate
+fi
+
+source $PROJECT_ROOT/settings.env
+
+set -x
+
+cd $PROJECT_ROOT/python
+
+echo $1
+
+# Step 2: Package the broadcast
+python -m late_now.plan_broadcast.packaging_main \
+    --input-structure-path $1 \
+    --output-tar-path ${TAR_BROADCAST_PLAN}
+
+# Step 3: Record the broadcast
+python -m late_now.record_broadcast.main \
+    --input-tar-path ${TAR_BROADCAST_PLAN} \
+    --output-uri ${OUTPUT_MP4_URI} \
+
+echo "Broadcast recorded at ${OUTPUT_MP4_URI}."

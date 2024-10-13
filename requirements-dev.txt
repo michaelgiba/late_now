@@ -1,0 +1,4 @@
+black==24.8.0
+ruff==0.6.9
+mypy==1.11.2
+mypy-extensions==1.0.0

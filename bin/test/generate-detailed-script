@@ -1,0 +1,30 @@
+#!/bin/bash
+
+set -euo pipefail
+
+CALLER_DIR=$(pwd)
+SCRIPT_PATH=$(realpath "$1")
+PROJECT_ROOT=$(dirname $(dirname "$(readlink -f "$0")"))
+
+if [[ -z "${VIRTUAL_ENV:-}" ]]; then
+    source $PROJECT_ROOT/.venv/bin/activate
+fi
+
+source $PROJECT_ROOT/settings.env
+
+set -x
+
+cd $PROJECT_ROOT/python
+
+BROADCAST_UUID=$(cat /proc/sys/kernel/random/uuid | cut -c 1-8)
+NEW_BROADCAST_NAME="broadcast_${BROADCAST_UUID}"
+SHOW_STRUCTURE_JSON=/tmp/${NEW_BROADCAST_NAME}_structure.json
+TAR_BROADCAST_PLAN=/tmp/${NEW_BROADCAST_NAME}.tar
+OUTPUT_MP4_URI=${CALLER_DIR}/${NEW_BROADCAST_NAME}.mp4
+
+# Step 1: Create show structure
+python -m late_now.plan_broadcast.show_structure_main \
+    --rough-script-path $PROJECT_ROOT/show_scripts/random_rambling.txt \
+    --output-structure-path ${SHOW_STRUCTURE_JSON}
+
+echo "Structure created at ${SHOW_STRUCTURE_JSON}."

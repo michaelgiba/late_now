@@ -1,0 +1,25 @@
+#!/bin/bash
+
+set -euo pipefail
+
+CALLER_DIR=$(pwd)
+SCRIPT_PATH=$(realpath "$1")
+PROJECT_ROOT=$(dirname $(dirname "$(readlink -f "$0")"))
+
+if [[ -z "${VIRTUAL_ENV:-}" ]]; then
+    source $PROJECT_ROOT/.venv/bin/activate
+fi
+
+source $PROJECT_ROOT/settings.env
+
+set -x
+
+cd $PROJECT_ROOT/python
+
+echo $1
+
+python -m late_now.record_broadcast.main \
+    --input-tar-path $1 \
+    --output-uri ${CALLER_DIR}/out.mp4 
+
+echo "Broadcast recorded at out.mp4."

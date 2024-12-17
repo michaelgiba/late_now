@@ -13,6 +13,7 @@ if [ ! -d "$ANIPORTRAIT_ROOT" ]; then
   git clone https://github.com/michaelgiba/AniPortrait "$ANIPORTRAIT_ROOT"
   virtualenv -ppython3.10 "$ANIPORTRAIT_ROOT/.venv"
   source "$ANIPORTRAIT_ROOT/.venv/bin/activate"
+  pip install -U setuptools
   pip install -r "$ANIPORTRAIT_ROOT/requirements.txt"
   deactivate
 fi
@@ -22,11 +23,13 @@ if [ ! -d "$MOMASK_ROOT" ]; then
   git clone https://github.com/michaelgiba/momask-codes "$MOMASK_ROOT"
   virtualenv -ppython3.10 "$MOMASK_ROOT/.venv"
   source "$MOMASK_ROOT/.venv/bin/activate"
+  pip install -U setuptools
   pip install -r "$MOMASK_ROOT/requirements.txt"
   deactivate  
 fi
 
 virtualenv -ppython3.10 "$PROJECT_ROOT/.venv"
 source "$PROJECT_ROOT/.venv/bin/activate"
-pip install -r "$PROJECT_ROOT/requirements.txt"
+pip install -U setuptools
+pip install -r "$PROJECT_ROOT/python/requirements.txt"
 deactivate

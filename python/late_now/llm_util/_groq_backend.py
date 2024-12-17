@@ -3,7 +3,7 @@ import time
 import requests
 import os
 
-_GROQ_APIKEY = os.environ.get("GROQ_APIKEY")
+_GROQ_APIKEY = os.environ.get("GROQ_API_KEY")
 
 
 def completion(prompt: str, system_prompt: str, temperature: float) -> str:

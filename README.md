@@ -63,18 +63,18 @@ https://github.com/user-attachments/assets/1c5a6e94-6214-48f1-87c0-d212f7c5f9ae
 https://github.com/user-attachments/assets/c18bb13a-0a60-438d-aedd-aaa76a9a8a6a
 
 
-## 📝 License
+## 📜 License
 
 Apache 2.0
 
 ## 🤝 Contributing
 
-All contributions are welcome, some extensions include:
+All contributions are welcome! Some potential extensions include:
 
-Optimize end-to-end generation time to seconds using multiple machines
-Deploy the system as a web service for generating short, funny videos from user-provided articles
-Launch a never-ending show similar to the surreal "Nothing Forever"
-Extend to use 3D generation models for new characters or scenes
-Implement img2img model processing for frame restyling or realism
+- Optimize end-to-end generation time using distributed computing
+- Deploy as a web service for video generation
+- Create a continuous show similar to "Nothing Forever"
+- Integrate 3D generation models for new characters/scenes
+- Add img2img processing for frame styling
 
-Feel free to fork the repository, work on these ideas, or propose your own.
+Feel free to fork the repository and contribute your own ideas!

@@ -15,7 +15,7 @@ def completion(prompt: str, system_prompt: str, temperature: float) -> str:
             "Authorization": f"Bearer {_GROQ_APIKEY}",
         },
         json={
-            "model": "llama-3.1-8b-instant",
+            "model": "llama-3.3-70b-versatile",
             "messages": [
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": prompt},

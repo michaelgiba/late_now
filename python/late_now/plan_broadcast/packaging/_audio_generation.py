@@ -9,6 +9,7 @@ from late_now.plan_broadcast._types import (
     SegmentDetailedScript,
     ShowSegment,
 )
+from late_now.plan_broadcast.packaging import _f5_tts_infer
 from scipy.io.wavfile import write as write_wav
 from transformers import AutoProcessor, BarkModel
 import torchaudio
@@ -69,50 +70,21 @@ def _get_sound_effect_data(sound_effect: str, duration: int) -> np.array:
 
 
 @cache
-def _get_pad_silence() -> np.ndarray:
-    return np.zeros(int(0.25 * _get_sample_rate()))  # quarter second of silence
+def _get_pad_silence(sample_rate) -> np.ndarray:
+    return np.zeros(int(0.25 * sample_rate)) 
 
 
-def _get_model():
-    model = BarkModel.from_pretrained("suno/bark-small").to("cuda")
-    model.enable_cpu_offload()
-    processor = AutoProcessor.from_pretrained("suno/bark-small")
-    return processor, model
-
-
-@cache
-def _get_sample_rate():
-    # model.generation_config.sample_rate
-    return 24_000
-
-
-def _generate_audio(
-    processor, model, text: str, speedup: float = 1.1, gain: float = 1.3
-) -> np.ndarray:
-    inputs = processor(text, voice_preset=VOICE_PRESET).to("cuda")
-    audio_array = model.generate(**inputs)
-    audio_array = audio_array.cpu().numpy().squeeze()
-
-    # Speed up the audio by a factor of two
-    # audio_array = librosa.effects.time_stretch(audio_array, rate=speedup)
-    # audio_array, _ = librosa.effects.trim(audio_array)
-    # audio_array *= gain
-    return audio_array
-
-
-def _generate_audio_for_line(
-    processor, model, text: str
-) -> tuple[np.ndarray, list[tuple[str, float]]]:
+def _generate_audio_for_line(text: str) -> tuple[np.ndarray, list[tuple[str, float]]]:
     pieces = []
     sentences = nltk.sent_tokenize(text)
     sentences_and_durations = []
 
     for _, sentence in enumerate(sentences):
-        audio_array = _generate_audio(processor, model, sentence)
-        pad_silence = _get_pad_silence().copy()
+        audio_array, sample_rate = _f5_tts_infer.audio_and_sample_rate_for_setence(sentence)
+        pad_silence = _get_pad_silence(int(sample_rate)).copy()
         piece = [audio_array, pad_silence]
         pieces += piece
-        piece_duration = (len(audio_array) + len(pad_silence)) / _get_sample_rate()
+        piece_duration = (len(audio_array) + len(pad_silence)) / sample_rate
         sentences_and_durations.append((sentence, piece_duration))
 
     return np.concatenate(pieces), sentences_and_durations
@@ -142,10 +114,12 @@ def _walter_pause_for_sound_effect_length(
         raise ValueError()
 
 
+def _get_sample_rate():
+    return 24_000
+
 def _generate_long_audio(
     detailed_script: SegmentDetailedScript,
 ) -> tuple[np.ndarray, list[tuple[str, float]], float]:
-    processor, model = _get_model()
 
     walter_pieces = []
     sound_effect_pieces = []
@@ -199,7 +173,7 @@ def _generate_long_audio(
         elif line.line_type == "dialog":
             # Create speech
             piece_audio, piece_sentences_and_durations = _generate_audio_for_line(
-                processor, model, line.content["text"]
+                line.content["text"]
             )
             total_walter_piece_duration_sec = len(piece_audio) / _get_sample_rate()
 
@@ -250,8 +224,6 @@ def _generate_long_audio(
     )
     total_duration = len(walter_track) / _get_sample_rate()
 
-    del model
-    del processor
 
     return (
         _soft_clip(walter_track + sound_effect_track),

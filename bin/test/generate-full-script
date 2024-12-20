@@ -4,7 +4,7 @@ set -euo pipefail
 
 CALLER_DIR=$(pwd)
 SCRIPT_PATH=$(realpath "$1")
-PROJECT_ROOT=$(dirname $(dirname "$(readlink -f "$0")"))
+PROJECT_ROOT=$(dirname $(dirname $(dirname "$(readlink -f "$0")")))
 
 if [[ -z "${VIRTUAL_ENV:-}" ]]; then
     source $PROJECT_ROOT/.venv/bin/activate
@@ -24,7 +24,7 @@ OUTPUT_MP4_URI=${CALLER_DIR}/${NEW_BROADCAST_NAME}.mp4
 
 # Step 1: Create show structure
 python -m late_now.plan_broadcast.show_structure_main \
-    --rough-script-path $PROJECT_ROOT/show_scripts/random_rambling.txt \
+    --rough-script-path $SCRIPT_PATH \
     --output-structure-path ${SHOW_STRUCTURE_JSON}
 
 # Step 2: Package the broadcast
